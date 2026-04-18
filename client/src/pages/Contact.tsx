@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Mail,
   Globe,
@@ -25,6 +26,8 @@ import {
   CheckCircle2,
   Send,
   Clock,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { LogoIcon } from "../components/LogoIcon";
 import { toast } from "sonner";
@@ -35,6 +38,7 @@ interface ContactFormData {
   email: string;
   subject: string;
   message: string;
+  agreedToTerms: boolean;
 }
 
 export default function Contact() {
@@ -43,9 +47,11 @@ export default function Contact() {
     email: "",
     subject: "",
     message: "",
+    agreedToTerms: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showDisclaimer, setShowDisclaimer] = useState(false);
 
   const updateFormData = (field: keyof ContactFormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -56,6 +62,11 @@ export default function Contact() {
 
     if (!formData.name || !formData.email || !formData.message) {
       toast.error("Please fill in all required fields");
+      return;
+    }
+
+    if (!formData.agreedToTerms) {
+      toast.error("Please agree to the Terms & Conditions and Privacy Policy");
       return;
     }
 
@@ -303,6 +314,20 @@ export default function Contact() {
                   />
                 </div>
 
+                <div className="bg-background/50 p-6 rounded-xl border border-border mb-6">
+                  <div className="flex items-start space-x-4">
+                    <Checkbox
+                      id="agreedToTerms"
+                      checked={formData.agreedToTerms}
+                      onCheckedChange={(checked) => updateFormData("agreedToTerms", checked === true)}
+                      className="mt-1 w-5 h-5 data-[state=checked]:bg-[#0EA5E9] data-[state=checked]:border-[#0EA5E9] border-border shrink-0"
+                    />
+                    <Label htmlFor="agreedToTerms" className="text-sm font-normal text-muted-foreground leading-relaxed cursor-pointer pt-0.5 block">
+                      <span>I agree to LaserFlow's <a href="https://app.termly.io/policy-viewer/policy.html?policyUUID=ca6aefbb-e411-4065-8cfb-36cbea11c613" target="_blank" rel="noopener noreferrer" className="text-[#0EA5E9] hover:text-[#38bdf8] hover:underline transition-colors whitespace-nowrap">Terms & Conditions</a> and <a href="https://app.termly.io/policy-viewer/policy.html?policyUUID=576499bb-e5ba-4839-989d-a639e19739ef" target="_blank" rel="noopener noreferrer" className="text-[#0EA5E9] hover:text-[#38bdf8] hover:underline transition-colors whitespace-nowrap">Privacy Policy</a>. <span className="text-destructive">*</span></span>
+                    </Label>
+                  </div>
+                </div>
+
                 <Button
                   type="submit"
                   disabled={isSubmitting}
@@ -335,11 +360,46 @@ export default function Contact() {
                     </>
                   )}
                 </Button>
-              </form>
 
-              <p className="text-sm text-muted-foreground mt-6 text-center">
-                By submitting this form, you agree to our privacy policy.
-              </p>
+                <div className="text-[12px] text-muted-foreground leading-relaxed mt-6">
+                    <div 
+                        className={`transition-all duration-500 ease-in-out`}
+                        style={!showDisclaimer ? { 
+                            maxHeight: '42px', 
+                            overflow: 'hidden',
+                            maskImage: 'linear-gradient(to bottom, black 30%, transparent 100%)',
+                            WebkitMaskImage: 'linear-gradient(to bottom, black 30%, transparent 100%)'
+                        } : {
+                            maxHeight: '500px',
+                            overflow: 'hidden'
+                        }}
+                    >
+                        <p className="mb-2">
+                            By clicking 'Submit', I agree to receive recurring marketing messages and outbound calls at the number provided. I understand these communications may be sent via automated technology, including an AI voice and pre-recorded messages, from Laserflow or its partners.
+                        </p>
+                        <p>
+                            Consent is not a condition of purchase. Msg & data rates may apply. I can opt-out at any time by replying STOP to any text or stating 'Unsubscribe' during a call.
+                        </p>
+                    </div>
+                    {showDisclaimer ? (
+                        <button
+                            type="button"
+                            onClick={() => setShowDisclaimer(false)}
+                            className="text-[#0EA5E9] hover:text-[#38bdf8] flex items-center gap-1 mt-2 font-medium transition-colors outline-none"
+                        >
+                            Show less <ChevronUp className="w-3 h-3" />
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={() => setShowDisclaimer(true)}
+                            className="text-[#0EA5E9] hover:text-[#38bdf8] flex items-center gap-1 mt-1 font-medium transition-colors outline-none"
+                        >
+                            Read full disclaimer <ChevronDown className="w-3 h-3" />
+                        </button>
+                    )}
+                </div>
+              </form>
             </div>
           </motion.div>
         </div>

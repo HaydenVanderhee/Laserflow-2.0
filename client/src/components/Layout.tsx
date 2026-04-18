@@ -39,10 +39,6 @@ export default function Layout({ children }: LayoutProps) {
     { href: "/contact", label: "Contact" },
   ];
 
-  if (location === "/demo") {
-    return <>{children}</>;
-  }
-
   return (
     <div className="min-h-screen flex flex-col bg-background">
       {/* Navigation */}

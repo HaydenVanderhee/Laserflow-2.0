@@ -26,6 +26,44 @@
   <meta name="twitter:site" content="@laserflow" />
   <link rel="canonical" href="https://laserflow.co" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
+  <script>
+    (function () {
+      var nodes = [];
+      var skip = { script: 1, style: 1, noscript: 1, link: 1 };
+
+      function isHome() { return window.location.pathname === '/'; }
+
+      function applyAll() {
+        var show = isHome();
+        for (var i = 0; i < nodes.length; i++) {
+          nodes[i].style.setProperty('display', show ? '' : 'none', 'important');
+        }
+      }
+
+      // Catch widget elements as they're injected into <body>
+      new MutationObserver(function (mutations) {
+        mutations.forEach(function (m) {
+          m.addedNodes.forEach(function (node) {
+            if (!(node instanceof HTMLElement)) return;
+            if (skip[node.tagName.toLowerCase()]) return;
+            if (node.id === 'root') return;
+            nodes.push(node);
+            if (!isHome()) node.style.setProperty('display', 'none', 'important');
+          });
+        });
+      }).observe(document.body, { childList: true });
+
+      // Detect SPA navigation (wouter uses history.pushState)
+      function onNav() { setTimeout(applyAll, 0); }
+      var _push = history.pushState.bind(history);
+      var _replace = history.replaceState.bind(history);
+      history.pushState = function () { _push.apply(history, arguments); onNav(); };
+      history.replaceState = function () { _replace.apply(history, arguments); onNav(); };
+      window.addEventListener('popstate', onNav);
+
+      window.__applyWidgetVisibility = applyAll;
+    })();
+  </script>
 
   <!-- Leadsy Tracking Pixel -->
   <script id="vtag-ai-js" async src="https://r2.leadsy.ai/tag.js" data-pid="1jsollCrkhOx8l0Mr" data-version="062024"></script>
@@ -77,13 +115,8 @@
 
 <body>
   <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
+<script type="module" src="/src/main.tsx"></script>
   <script defer src="%VITE_ANALYTICS_ENDPOINT%/umami" data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
-  <script
-    src="https://widgets.leadconnectorhq.com/loader.js"
-    data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js"
-    data-widget-id="69e21e404d9d8fff65614785">
-  </script>
 </body>
 
 </html>

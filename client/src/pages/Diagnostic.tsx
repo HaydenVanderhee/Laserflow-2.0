@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
-import { CheckCircle2, Send, ArrowRight, ArrowLeft, ArrowDown } from "lucide-react";
+import { CheckCircle2, Send, ArrowRight, ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
 
@@ -25,10 +25,8 @@ interface DiagnosticData {
     phone: string;
 
     // Step 1: Business Details
-    monthlyRevenue: string;     // Select/Dropdown or Buttons
     staffMembers: string;       // 1-5, 6-15, 16-30, 30+
     softwareCrm: string;        // text input
-    monthlyLeads: string;       // Select
     painPoints: string[];       // checkboxes (array of strings)
     biggestChallenge: string;   // text area
 
@@ -36,13 +34,11 @@ interface DiagnosticData {
     implementedAutomationPast: string; // Yes / No
     automationGoals: string;          // text area
     implementationTimeline: string;   // As soon as possible, 1-3 months, Just exploring
-    revenueTarget3Months: string;     // text area
 
-    // Step 3: Diagnostic Traps & Compliance
+    // Compliance
     runAds: string;
     adSpending: string;
     adManager: string;
-    averageLtv: string;
     deadLeads: string;
     inquiryResponseTime: string;
     additionalInfo: string;
@@ -56,22 +52,18 @@ const initialData: DiagnosticData = {
     email: "",
     phone: "",
 
-    monthlyRevenue: "",
     staffMembers: "",
     softwareCrm: "",
-    monthlyLeads: "",
     painPoints: [],
     biggestChallenge: "",
 
     implementedAutomationPast: "",
     automationGoals: "",
     implementationTimeline: "",
-    revenueTarget3Months: "",
 
     runAds: "",
     adSpending: "",
     adManager: "",
-    averageLtv: "",
     deadLeads: "",
     inquiryResponseTime: "",
     additionalInfo: "",
@@ -86,6 +78,7 @@ export default function Diagnostic() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [showDisclaimer, setShowDisclaimer] = useState(false);
 
     const handleMouseMove = (e: React.MouseEvent) => {
         setMousePosition({ x: e.pageX, y: e.pageY });
@@ -112,16 +105,8 @@ export default function Diagnostic() {
             toast.error("Please enter a valid email address.");
             return false;
         }
-        if (!formData.monthlyRevenue) {
-            toast.error("Please explicitly select your Current Monthly Revenue.");
-            return false;
-        }
         if (!formData.staffMembers) {
             toast.error("Please indicate how many staff members your med spa has.");
-            return false;
-        }
-        if (!formData.monthlyLeads) {
-            toast.error("Please indicate your estimated monthly lead volume.");
             return false;
         }
         return true;
@@ -130,14 +115,6 @@ export default function Diagnostic() {
     const validateStep2 = (): boolean => {
         if (!formData.implementationTimeline) {
             toast.error("Please let us know your implementation timeline.");
-            return false;
-        }
-        return true;
-    };
-
-    const validateStep3 = (): boolean => {
-        if (!formData.averageLtv) {
-            toast.error("Please provide your average LTV.");
             return false;
         }
         if (!formData.agreedToTerms) {
@@ -149,7 +126,6 @@ export default function Diagnostic() {
 
     const handleNextStep = () => {
         if (currentStep === 1 && !validateStep1()) return;
-        if (currentStep === 2 && !validateStep2()) return;
         setCurrentStep((prev) => prev + 1);
         // Scroll to top of the form container smoothly
         document.querySelector('.lg\\:overflow-y-auto')?.scrollTo({ top: 0, behavior: 'smooth' });
@@ -161,7 +137,7 @@ export default function Diagnostic() {
     };
 
     const handleSubmit = async () => {
-        if (!validateStep3()) return;
+        if (!validateStep2()) return;
 
         setIsSubmitting(true);
         try {
@@ -239,12 +215,12 @@ export default function Diagnostic() {
                 }}
             />
             {/* --- HERO SECTION (Constrained Viewport) --- */}
-            <div className="relative w-full h-[60vh] min-h-[480px] max-h-[600px] flex flex-col items-center justify-center px-4 pt-8 z-10 transition-all">
+            <div className="relative w-full flex flex-col items-center justify-center px-4 pt-16 pb-12 z-10 transition-all">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="w-full max-w-4xl mx-auto flex flex-col items-center text-center mt-[-8vh]"
+                    className="w-full max-w-4xl mx-auto flex flex-col items-center text-center"
                 >
                     <h1 className="text-4xl md:text-5xl lg:text-[64px] font-bold font-[family-name:var(--font-display)] mb-8 text-white tracking-tight leading-[1.1]">
                         Call Confirmed.<br />
@@ -263,24 +239,6 @@ export default function Diagnostic() {
                     </div>
 
                 </motion.div>
-            </div>
-
-            {/* --- VIDEO SECTION --- */}
-            <div className="relative z-10 w-full max-w-3xl mx-auto px-4 md:px-8 py-8">
-                <p className="text-center text-slate-300 text-lg md:text-xl font-medium mb-6">
-                    Please watch this short video before filling out the form below
-                </p>
-                <div className="rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-[#0B1120]">
-                    <video
-                        controls
-                        className="w-full"
-                        preload="metadata"
-                        playsInline
-                    >
-                        <source src="/Video%20Project%206.mp4?v=3" type="video/mp4" />
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
             </div>
 
             {/* --- FORM CONTAINER --- */}
@@ -338,19 +296,8 @@ export default function Diagnostic() {
                                         {currentStep >= 2 && <div className="w-2 h-2 bg-[#0EA5E9] rounded-full" />}
                                     </div>
                                     <div className="ml-12 flex flex-col transition-all">
-                                        <span className={`${currentStep >= 2 ? 'text-[#FFFFFF] font-semibold' : 'text-[#9CA3AF] font-medium'} text-lg mb-1`}>Goals & Timeline</span>
+                                        <span className={`${currentStep >= 2 ? 'text-[#FFFFFF] font-semibold' : 'text-[#9CA3AF] font-medium'} text-lg mb-1`}>Goals & Diagnostics</span>
                                         <span className={`${currentStep >= 2 ? 'text-slate-400' : 'text-slate-500'} text-sm`}>We establish your automation path</span>
-                                    </div>
-                                </div>
-
-                                {/* Step 3 */}
-                                <div className="relative flex items-start group">
-                                    <div className={`absolute left-0 w-7 h-7 bg-[#080C17] rounded-full border-2 flex items-center justify-center z-10 transition-all ${currentStep >= 3 ? 'border-[#0EA5E9]' : 'border-slate-700'} ${currentStep === 3 ? 'shadow-[0_0_10px_rgba(14,165,233,0.3)]' : ''}`}>
-                                        {currentStep >= 3 && <div className="w-2 h-2 bg-[#0EA5E9] rounded-full" />}
-                                    </div>
-                                    <div className="ml-12 flex flex-col transition-all">
-                                        <span className={`${currentStep >= 3 ? 'text-[#FFFFFF] font-semibold' : 'text-[#9CA3AF] font-medium'} text-lg mb-1`}>Diagnostic Traps</span>
-                                        <span className={`${currentStep >= 3 ? 'text-slate-400' : 'text-slate-500'} text-sm`}>We unearth revenue leaks</span>
                                     </div>
                                 </div>
                             </div>
@@ -404,29 +351,6 @@ export default function Diagnostic() {
                                             />
                                         </div>
 
-                                        <div className="space-y-3">
-                                            <Label className="text-slate-300 font-semibold text-[15px]">
-                                                Current Monthly Revenue <span className="text-red-500">*</span>
-                                            </Label>
-                                            <Select
-                                                value={formData.monthlyRevenue}
-                                                onValueChange={(value) => updateFormData("monthlyRevenue", value)}
-                                            >
-                                                <SelectTrigger className="bg-[#131B2F] border-slate-700 md:w-[350px] focus:ring-[#0EA5E9] text-white h-auto py-3.5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
-                                                    <SelectValue placeholder="Select revenue range" />
-                                                </SelectTrigger>
-                                                <SelectContent className="bg-[#131B2F] border-slate-700 text-white shadow-2xl">
-                                                    <SelectItem value="under-50k" className="focus:bg-[#0EA5E9]/20 focus:text-white py-3 leading-loose">Under $50k</SelectItem>
-                                                    <SelectItem value="50k-100k" className="focus:bg-[#0EA5E9]/20 focus:text-white py-3 leading-loose">$50k - $100k</SelectItem>
-                                                    <SelectItem value="100k-150k" className="focus:bg-[#0EA5E9]/20 focus:text-white py-3 leading-loose">$100k - $150k</SelectItem>
-                                                    <SelectItem value="150k-250k" className="focus:bg-[#0EA5E9]/20 focus:text-white py-3 leading-loose">$150k - $250k</SelectItem>
-                                                    <SelectItem value="250k-400k" className="focus:bg-[#0EA5E9]/20 focus:text-white py-3 leading-loose">$250k - $400k</SelectItem>
-                                                    <SelectItem value="400k-600k" className="focus:bg-[#0EA5E9]/20 focus:text-white py-3 leading-loose">$400k - $600k</SelectItem>
-                                                    <SelectItem value="600k-1m" className="focus:bg-[#0EA5E9]/20 focus:text-white py-3 leading-loose">$600k - $1M</SelectItem>
-                                                    <SelectItem value="1m+" className="focus:bg-[#0EA5E9]/20 focus:text-white py-3 leading-loose">$1M+</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
 
                                         <div className="space-y-3">
                                             <Label className="text-slate-300 font-semibold text-[15px]">
@@ -462,26 +386,6 @@ export default function Diagnostic() {
                                             />
                                         </div>
 
-                                        <div className="space-y-3">
-                                            <Label className="text-slate-300 font-semibold text-[15px]">
-                                                How many leads do you receive per month? <span className="text-red-500">*</span>
-                                            </Label>
-                                            <Select
-                                                value={formData.monthlyLeads}
-                                                onValueChange={(value) => updateFormData("monthlyLeads", value)}
-                                            >
-                                                <SelectTrigger className="bg-[#131B2F] border-slate-700 md:w-[350px] focus:ring-[#0EA5E9] text-white h-auto py-3.5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
-                                                    <SelectValue placeholder="Select monthly lead volume" />
-                                                </SelectTrigger>
-                                                <SelectContent className="bg-[#131B2F] border-slate-700 text-white shadow-2xl">
-                                                    <SelectItem value="under-50" className="focus:bg-[#0EA5E9]/20 focus:text-white py-3 leading-loose">Under 50</SelectItem>
-                                                    <SelectItem value="50-100" className="focus:bg-[#0EA5E9]/20 focus:text-white py-3 leading-loose">50 - 100</SelectItem>
-                                                    <SelectItem value="100-300" className="focus:bg-[#0EA5E9]/20 focus:text-white py-3 leading-loose">100 - 300</SelectItem>
-                                                    <SelectItem value="300-500" className="focus:bg-[#0EA5E9]/20 focus:text-white py-3 leading-loose">300 - 500</SelectItem>
-                                                    <SelectItem value="500+" className="focus:bg-[#0EA5E9]/20 focus:text-white py-3 leading-loose">500+</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
 
                                         <div className="space-y-4">
                                             <Label className="text-slate-300 font-semibold text-[15px]">
@@ -605,38 +509,7 @@ export default function Diagnostic() {
                                             </div>
                                         </div>
 
-                                        <div className="space-y-3">
-                                            <Label htmlFor="revenueTarget3Months" className="text-slate-300 font-semibold text-[15px]">
-                                                If we could fix your booking system in 30 days, what is your revenue target for the next 3 months?
-                                            </Label>
-                                            <Textarea
-                                                id="revenueTarget3Months"
-                                                placeholder="e.g., Increase revenue by 30%, reach $50k/month, etc."
-                                                value={formData.revenueTarget3Months}
-                                                onChange={(e) => updateFormData("revenueTarget3Months", e.target.value)}
-                                                className="bg-[#131B2F] border-slate-700 min-h-[120px] focus-visible:ring-1 focus-visible:ring-[#0EA5E9] focus-visible:border-[#0EA5E9] transition-all text-white placeholder:text-slate-600 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] resize-y p-5"
-                                            />
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            )}
-
-                            {/* --- STEP 3 UI --- */}
-                            {currentStep === 3 && (
-                                <motion.div
-                                    key="step3"
-                                    initial={{ opacity: 0, x: 20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -20 }}
-                                >
-                                    {/* Section 1: The Diagnostic Traps */}
-                                    <div className="mb-12">
-                                        <h2 className="text-xl font-semibold text-white mb-6 font-[family-name:var(--font-display)] flex items-center gap-3">
-                                            <span className="w-7 h-7 rounded-full bg-[#0EA5E9]/15 text-[#0EA5E9] flex items-center justify-center text-sm border border-[#0EA5E9]/30">3</span>
-                                            The Diagnostic Traps
-                                        </h2>
-                                        <div className="space-y-8">
-                                            <div className="space-y-3">
+                                            <div className="space-y-3 pt-6 border-t border-slate-800/50 mt-8">
                                                 <Label className="text-slate-300">Do you currently run ads for your med spa?</Label>
                                                 <RadioGroup
                                                     value={formData.runAds}
@@ -699,26 +572,7 @@ export default function Diagnostic() {
                                                 </motion.div>
                                             )}
 
-                                            <div className="space-y-3">
-                                                <Label className="text-slate-300">
-                                                    What is your average LTV per patient? <span className="text-red-500">*</span>
-                                                </Label>
-                                                <Select
-                                                    value={formData.averageLtv}
-                                                    onValueChange={(value) => updateFormData("averageLtv", value)}
-                                                >
-                                                    <SelectTrigger className="bg-[#131B2F] border-slate-700 md:w-1/2 focus:ring-[#0EA5E9] text-white h-auto py-3.5">
-                                                        <SelectValue placeholder="Select average LTV per patient" />
-                                                    </SelectTrigger>
-                                                    <SelectContent className="bg-[#131B2F] border-slate-700 text-white shadow-2xl">
-                                                        <SelectItem value="under-1k" className="focus:bg-[#0EA5E9]/20 focus:text-white">Under $1,000</SelectItem>
-                                                        <SelectItem value="1k-3k" className="focus:bg-[#0EA5E9]/20 focus:text-white">$1,000 - $3,000</SelectItem>
-                                                        <SelectItem value="3k-5k" className="focus:bg-[#0EA5E9]/20 focus:text-white">$3,000 - $5,000</SelectItem>
-                                                        <SelectItem value="5k+" className="focus:bg-[#0EA5E9]/20 focus:text-white">$5,000+</SelectItem>
-                                                        <SelectItem value="dont-know" className="focus:bg-[#0EA5E9]/20 focus:text-white">I don't track this currently</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
+
 
                                             {/* Additional Context & Compliance */}
                                             <div className="space-y-3">
@@ -734,22 +588,19 @@ export default function Diagnostic() {
                                                 />
                                             </div>
 
-                                            <div className="space-y-5 bg-[#080C17] p-6 rounded-xl border border-slate-800/80">
-
-
+                                            <div className="bg-[#080C17] p-6 rounded-xl border border-slate-800/80 mb-4">
                                                 <div className="flex items-start space-x-4">
                                                     <Checkbox
                                                         id="agreedToTerms"
                                                         checked={formData.agreedToTerms}
                                                         onCheckedChange={(checked) => updateFormData("agreedToTerms", checked === true)}
-                                                        className="mt-1 w-5 h-5 data-[state=checked]:bg-[#0EA5E9] data-[state=checked]:border-[#0EA5E9] border-slate-600"
+                                                        className="mt-1 w-5 h-5 data-[state=checked]:bg-[#0EA5E9] data-[state=checked]:border-[#0EA5E9] border-slate-600 shrink-0"
                                                     />
-                                                    <Label htmlFor="agreedToTerms" className="text-sm font-normal text-slate-300 leading-relaxed cursor-pointer pt-0.5">
-                                                        I agree to LaserFlow's <a href="#" className="text-[#0EA5E9] hover:text-[#38bdf8] hover:underline transition-colors">Terms & Conditions</a> and <a href="#" className="text-[#0EA5E9] hover:text-[#38bdf8] hover:underline transition-colors">Privacy Policy</a>. <span className="text-red-500">*</span>
+                                                    <Label htmlFor="agreedToTerms" className="text-sm font-normal text-slate-300 leading-relaxed cursor-pointer pt-0.5 block">
+                                                        <span>I agree to LaserFlow's <a href="https://app.termly.io/policy-viewer/policy.html?policyUUID=ca6aefbb-e411-4065-8cfb-36cbea11c613" target="_blank" rel="noopener noreferrer" className="text-[#0EA5E9] hover:text-[#38bdf8] hover:underline transition-colors whitespace-nowrap">Terms & Conditions</a> and <a href="https://app.termly.io/policy-viewer/policy.html?policyUUID=576499bb-e5ba-4839-989d-a639e19739ef" target="_blank" rel="noopener noreferrer" className="text-[#0EA5E9] hover:text-[#38bdf8] hover:underline transition-colors whitespace-nowrap">Privacy Policy</a>. <span className="text-red-500">*</span></span>
                                                     </Label>
                                                 </div>
                                             </div>
-                                        </div>
                                     </div>
                                 </motion.div>
                             )}
@@ -769,7 +620,7 @@ export default function Diagnostic() {
                                     <div></div>
                                 )}
 
-                                {currentStep < 3 ? (
+                                {currentStep < 2 ? (
                                     <Button
                                         onClick={handleNextStep}
                                         className="bg-[#0EA5E9] hover:bg-[#0284c7] hover:shadow-[0_0_20px_rgba(14,165,233,0.4)] text-white font-semibold px-8 py-6 h-auto text-base rounded-xl transition-all duration-300 min-w-[160px]"
@@ -801,13 +652,54 @@ export default function Diagnostic() {
                                 )}
                             </div>
 
-                            {currentStep === 3 && (
-                                <div className="flex items-center justify-end gap-2 text-slate-500 mt-6">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                    </svg>
-                                    <span className="text-[13px] font-medium">End-to-end encrypted. Your clinic's data is strictly confidential.</span>
+                            {currentStep === 2 && (
+                                <div className="mt-8">
+                                    <div className="flex items-center justify-end gap-2 text-slate-500 mb-6">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                        </svg>
+                                        <span className="text-[13px] font-medium">End-to-end encrypted. Your clinic's data is strictly confidential.</span>
+                                    </div>
+
+                                    <div className="text-[12px] text-slate-500 leading-relaxed mt-6">
+                                        <div 
+                                            className={`transition-all duration-500 ease-in-out`}
+                                            style={!showDisclaimer ? { 
+                                                maxHeight: '42px', 
+                                                overflow: 'hidden',
+                                                maskImage: 'linear-gradient(to bottom, black 30%, transparent 100%)',
+                                                WebkitMaskImage: 'linear-gradient(to bottom, black 30%, transparent 100%)'
+                                            } : {
+                                                maxHeight: '500px',
+                                                overflow: 'hidden'
+                                            }}
+                                        >
+                                            <p className="mb-2">
+                                                By clicking 'Submit', I agree to receive recurring marketing messages and outbound calls at the number provided. I understand these communications may be sent via automated technology, including an AI voice and pre-recorded messages, from Laserflow or its partners.
+                                            </p>
+                                            <p>
+                                                Consent is not a condition of purchase. Msg & data rates may apply. I can opt-out at any time by replying STOP to any text or stating 'Unsubscribe' during a call.
+                                            </p>
+                                        </div>
+                                        {showDisclaimer ? (
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowDisclaimer(false)}
+                                                className="text-[#0EA5E9] hover:text-[#38bdf8] flex items-center gap-1 mt-2 font-medium transition-colors outline-none"
+                                            >
+                                                Show less <ChevronUp className="w-3 h-3" />
+                                            </button>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowDisclaimer(true)}
+                                                className="text-[#0EA5E9] hover:text-[#38bdf8] flex items-center gap-1 mt-1 font-medium transition-colors outline-none"
+                                            >
+                                                Read full disclaimer <ChevronDown className="w-3 h-3" />
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             )}
                         </motion.div>

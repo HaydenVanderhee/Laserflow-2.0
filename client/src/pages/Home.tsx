@@ -181,18 +181,22 @@ export default function Home() {
                 Book Your Strategy Call <ArrowRight className="w-4 h-4 ml-1" />
               </button>
             </Link>
-            <Link href="/demo">
-              <button className="bg-[#21212B] text-white px-8 py-4 rounded-full font-bold text-sm md:text-base hover:scale-[1.03] hover:bg-[#2A2A35] transition-all flex items-center justify-center gap-2 shadow-lg w-full sm:w-auto">
-                Watch the Systems Breakdown
-              </button>
-            </Link>
+            <button 
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="bg-[#21212B] text-white px-8 py-4 rounded-full font-bold text-sm md:text-base hover:scale-[1.03] hover:bg-[#2A2A35] transition-all flex items-center justify-center gap-2 shadow-lg w-full sm:w-auto"
+            >
+              How does it work?
+            </button>
           </div>
         </div>
       </section>
 
       {/* C. FEATURES */}
-      <section id="features" className="py-32 px-6 md:px-20 bg-[#0D0D12] relative z-20">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-32 px-6 md:px-20 bg-[#0D0D12] relative z-20">
+        <div id="how-it-works" className="max-w-7xl mx-auto scroll-mt-24">
           <div className="flex flex-col md:flex-row gap-6 mb-16 items-end justify-between">
             <div>
               <h2 className="font-['Space_Grotesk',sans-serif] text-4xl md:text-5xl font-bold mb-4">The 24/7 <span className="text-[#48CFCB]">Acquisition Engine</span></h2>
