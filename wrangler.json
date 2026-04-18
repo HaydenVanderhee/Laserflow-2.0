@@ -1,0 +1,14 @@
+{
+    "name": "laserflow-web",
+    "compatibility_date": "2024-03-02",
+    "compatibility_flags": [
+        "nodejs_compat"
+    ],
+    "assets": {
+        "directory": "dist",
+        "not_found_handling": "single-page-application"
+    },
+    "observability": {
+        "enabled": true
+    }
+}
