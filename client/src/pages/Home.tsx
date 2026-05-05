@@ -464,16 +464,10 @@ export default function Home() {
                 mockup: "none"
               },
               {
-                title: "Lead Capture",
-                description: "Intelligent systems that capture, qualify, and nurture inbound prospects 24/7. Never miss an opportunity again.",
-                image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80",
-                mockup: "laptop"
-              },
-              {
-                title: "Instant Responses",
-                description: "AI-powered texting responses to client inquiries within seconds, maintaining high engagement around the clock.",
-                image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80",
-                mockup: "phone"
+                title: "Client Onboarding",
+                description: "Streamlined onboarding workflows that gently guide new clients through clinic forms, consents, and preparation.",
+                image: "",
+                mockup: "sms-chat"
               },
               {
                 title: "OOO Handling",
@@ -482,10 +476,10 @@ export default function Home() {
                 mockup: "ai-agent"
               },
               {
-                title: "Client Onboarding",
-                description: "Streamlined onboarding workflows that gently guide new clients through clinic forms, consents, and preparation.",
-                image: "",
-                mockup: "sms-chat"
+                title: "SEO Optimization",
+                description: "Long-term organic growth strategies ensuring your specific local clinic ranks #1 for high-intent nearby search traffic.",
+                image: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=600&q=80",
+                mockup: "laptop"
               },
               {
                 title: "Custom Websites",
@@ -494,22 +488,10 @@ export default function Home() {
                 mockup: "laptop"
               },
               {
-                title: "CRM Management",
-                description: "Deep API integrations connecting your active lead sources directly to our parsing engine for total operational visibility.",
-                image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80",
-                mockup: "none"
-              },
-              {
                 title: "Google Review Management",
                 description: "Automated text protocols to capture 5-star reviews from satisfied patients while intercepting negative private feedback.",
                 image: "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?auto=format&fit=crop&w=600&q=80",
                 mockup: "phone"
-              },
-              {
-                title: "SEO Optimization",
-                description: "Long-term organic growth strategies ensuring your specific local clinic ranks #1 for high-intent nearby search traffic.",
-                image: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=600&q=80",
-                mockup: "laptop"
               }
             ].map((service, index) => {
               return (
@@ -644,6 +626,26 @@ export default function Home() {
               </div>
               );
             })}
+          </div>
+
+          {/* Wide "and more" box */}
+          <div className="mt-6 bg-[#0B0D15] rounded-3xl border border-white/5 p-10 md:p-14 flex flex-col md:flex-row items-center justify-between gap-8 hover:border-[#48CFCB]/40 transition-colors duration-500 group shadow-lg relative overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(72,207,203,0.05),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+            <div className="flex-1 text-center md:text-left relative z-10">
+              <h3 className="font-['Space_Grotesk',sans-serif] text-2xl md:text-3xl font-bold text-white mb-3 tracking-wide">
+                Tailored on <span className="text-[#48CFCB]">Demand.</span>
+              </h3>
+              <p className="text-gray-400 text-sm md:text-base leading-relaxed font-light opacity-80 max-w-xl">
+                Laserflow's AI platform is built to grow with your clinic — continuously adding new automations, integrations, and workflows tailored specifically for med spas. Every touchpoint, handled.
+              </p>
+            </div>
+            <div className="flex flex-wrap justify-center md:justify-end gap-2 relative z-10 max-w-sm">
+              {["Lead Re-engagement", "Appointment Reminders", "Intake Automation", "Staff Notifications", "Two-Way SMS", "CRM Integrations", "Post-Visit Follow-ups", "Offer Broadcasts"].map((item) => (
+                <span key={item} className="text-xs px-3 py-1.5 rounded-full border border-[#48CFCB]/20 text-[#48CFCB]/70 bg-[#48CFCB]/5 font-medium whitespace-nowrap">
+                  {item}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </section>

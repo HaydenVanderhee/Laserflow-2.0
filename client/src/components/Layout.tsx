@@ -196,19 +196,47 @@ export default function Layout({ children }: LayoutProps) {
             <p className="text-sm text-muted-foreground">
               © {new Date().getFullYear()} Laserflow. All rights reserved.
             </p>
-            <div className="flex gap-6 text-sm text-muted-foreground">
-              <button
-                onClick={() => alert("Privacy Policy - Coming Soon")}
+            <div className="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2 text-sm text-muted-foreground">
+              <a
+                href="https://app.termly.io/policy-viewer/policy.html?policyUUID=576499bb-e5ba-4839-989d-a639e19739ef"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="hover:text-[oklch(0.7_0.15_220)] transition-colors"
               >
                 Privacy Policy
-              </button>
-              <button
-                onClick={() => alert("Terms of Service - Coming Soon")}
+              </a>
+              <a
+                href="https://app.termly.io/policy-viewer/policy.html?policyUUID=ca6aefbb-e411-4065-8cfb-36cbea11c613"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="hover:text-[oklch(0.7_0.15_220)] transition-colors"
               >
                 Terms of Service
-              </button>
+              </a>
+              <a
+                href="https://app.termly.io/policy-viewer/policy.html?policyUUID=a6f7794e-80e0-4702-81d0-c2ce2289671d"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[oklch(0.7_0.15_220)] transition-colors"
+              >
+                Disclaimer
+              </a>
+              <a
+                href="https://app.termly.io/policy-viewer/policy.html?policyUUID=04469ba4-1e6f-4edf-8662-aba4c608f0b8"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[oklch(0.7_0.15_220)] transition-colors"
+              >
+                Acceptable Use Policy
+              </a>
+              <a
+                href="https://app.termly.io/policy-viewer/policy.html?policyUUID=023cecf5-639f-4c22-84e2-f7685cadc132"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[oklch(0.7_0.15_220)] transition-colors"
+              >
+                Accessibility Statement
+              </a>
             </div>
           </div>
         </div>

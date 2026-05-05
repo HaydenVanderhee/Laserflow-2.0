@@ -1,3 +1,6 @@
+# Nested repo - excluded to prevent Netlify build issues
+laserflow-web/
+
 # Dependencies
 **/node_modules
 .pnpm-store/
